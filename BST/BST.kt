@@ -189,7 +189,6 @@ class BST<K: Comparable<K>, V>: Interface<K, V>, Iterable<Pair<K, V>> {
                     while (smaller == smaller.parent?.left)
                         smaller = smaller.parent!!
                 }
-
             }
             return smaller.parent
         }
