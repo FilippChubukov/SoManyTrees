@@ -17,10 +17,13 @@ class BST<K: Comparable<K>, V>: Interface<K, V>, Iterable<Pair<K, V>> {
             when {
 
                 key < current.key -> current = current.left
+
                 key > current.key -> current = current.right
+
                 key == current.key -> return
-                }
+
             }
+        }
 
         if (parent == null) {
 
@@ -31,6 +34,7 @@ class BST<K: Comparable<K>, V>: Interface<K, V>, Iterable<Pair<K, V>> {
             key < parent!!.key -> parent.left = Node(key, value, parent)
 
             key > parent.key -> parent.right = Node(key, value, parent)
+
         }
     }
 
@@ -73,13 +77,14 @@ class BST<K: Comparable<K>, V>: Interface<K, V>, Iterable<Pair<K, V>> {
 
         NeedDeleted = FindPrivate(key)
         if (NeedDeleted == null) return
+
         else {
 
             delparent = NeedDeleted.parent
 
         }
 
-        if(NeedDeleted.left == null && NeedDeleted.right == null) {
+        if(NeedDeleted.left == null && NeedDeleted.right == null) { // Оба листа нулевые.
 
             if (NeedDeleted.parent == null) {
 
@@ -97,7 +102,7 @@ class BST<K: Comparable<K>, V>: Interface<K, V>, Iterable<Pair<K, V>> {
             }
         }
 
-        else if (NeedDeleted.left == null || NeedDeleted.right == null) {
+        else if (NeedDeleted.left == null || NeedDeleted.right == null) { // Только один лист нулевой.
 
             if (NeedDeleted.left == null) {
 
@@ -126,7 +131,9 @@ class BST<K: Comparable<K>, V>: Interface<K, V>, Iterable<Pair<K, V>> {
             }
 
         }
-        else {
+
+        else {// Оба листа не нулевые.
+
             val shifter: Node<K, V> = findmin(NeedDeleted.right)!!
 
             NeedDeleted.key = shifter.key
@@ -140,9 +147,11 @@ class BST<K: Comparable<K>, V>: Interface<K, V>, Iterable<Pair<K, V>> {
             }
 
             else {
+
                 shifter.parent?.right = shifter.right
 
-                 if (shifter.right != null) shifter.right!!.parent = shifter.parent
+                if (shifter.right != null) shifter.right!!.parent = shifter.parent
+
         }
         }
     }
@@ -153,29 +162,31 @@ class BST<K: Comparable<K>, V>: Interface<K, V>, Iterable<Pair<K, V>> {
         return (object: Iterator<Pair<K, V>> {
 
             var node = findmax(root)
-            var next = findmax(root)
+            var following = findmax(root)
             val last = findmin(root)
 
             override fun hasNext(): Boolean {
 
-                return node != null && node!!.key >= last!!.key
+                return (node != null && node!!.key >= last!!.key)
 
             }
 
             override fun next(): Pair<K, V> {
 
-                next = node
-                node = nextSmaller(node)
+                following = node
+                node = FindMaxSmaller(node)
 
-                return Pair(next!!.key, next!!.value)
+                return Pair(following!!.key, following  !!.value)
 
                 }
             })
         }
 
-        private fun nextSmaller(node: Node<K, V>?): Node<K, V>? {
+        private fun FindMaxSmaller(node: Node<K, V>?): Node<K, V>? {
 
-            var smaller = node ?: return null
+            if (node == null) return null
+
+            var smaller = node
 
             if (smaller.left != null) {
 
@@ -186,28 +197,28 @@ class BST<K: Comparable<K>, V>: Interface<K, V>, Iterable<Pair<K, V>> {
 
                 if (smaller.parent?.left == smaller) {
 
-                    while (smaller == smaller.parent?.left)
+                    while (smaller == smaller!!.parent?.left)
                         smaller = smaller.parent!!
                 }
             }
             return smaller.parent
         }
 
-        private fun findmin(rootNode: Node<K, V>?): Node<K, V>? {
+        private fun findmin(GetNode: Node<K, V>?): Node<K, V>? {
 
-            if (rootNode?.left == null)
-                return rootNode
-            else
-                return findmin(rootNode.left)
+            if (GetNode?.left == null) return GetNode
+
+            else return findmin(GetNode.left)
+
         }
 
-        private fun findmax(rootNode: Node<K, V>?): Node<K, V>? {
+        private fun findmax(GetNode: Node<K, V>?): Node<K, V>? {
 
-            if (rootNode?.right == null)
-                return rootNode
-            else
-                return findmax(rootNode.right)
+            if (GetNode?.right == null) return GetNode
+
+            else return findmax(GetNode.right)
         }
+
 }
 
 
