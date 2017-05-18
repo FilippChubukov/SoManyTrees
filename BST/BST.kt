@@ -84,7 +84,7 @@ class BST<K: Comparable<K>, V>: Interface<K, V>, Iterable<Pair<K, V>> {
 
         }
 
-        if(NeedDeleted.left == null && NeedDeleted.right == null) { // Оба листа нулевые.
+        if(NeedDeleted.left == null && NeedDeleted.right == null) { // Оба потомка нулевые.
 
             if (NeedDeleted.parent == null) {
 
@@ -102,7 +102,7 @@ class BST<K: Comparable<K>, V>: Interface<K, V>, Iterable<Pair<K, V>> {
             }
         }
 
-        else if (NeedDeleted.left == null || NeedDeleted.right == null) { // Только один лист нулевой.
+        else if (NeedDeleted.left == null || NeedDeleted.right == null) { // Только один потомок нулевой.
 
             if (NeedDeleted.left == null) {
 
@@ -132,7 +132,7 @@ class BST<K: Comparable<K>, V>: Interface<K, V>, Iterable<Pair<K, V>> {
 
         }
 
-        else {// Оба листа не нулевые.
+        else {// Оба потомка не нулевые.
 
             val shifter: Node<K, V> = findmin(NeedDeleted.right)!!
 
