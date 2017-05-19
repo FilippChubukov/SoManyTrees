@@ -21,7 +21,9 @@ fun main(args: Array<String>) {
 
                     else println("Not found")
 
-                }
+                } else println ("You didn't give key.")
+
+
             }
 
             "p" -> BSTPrinter<Int, Char>().TreePrinter(bst)
@@ -34,20 +36,22 @@ fun main(args: Array<String>) {
                 val key = readLine()?.toIntOrNull()
 
                 if (key != null) bst.delete(key)
+
+                else println ("You didn't give key.")
+
             }
 
             "q" -> return
 
             else -> {
 
-                println("Value for Node: ")
-
-                val values: CharArray? = readLine()?.toCharArray()
-                val value: Char = values!![0]
+                val value: Char = 'a'
 
                 val key = operation?.toIntOrNull()
 
                 if (key != null) bst.insert(key, value)
+
+                else println ("You didn't give key.")
 
             }
         }
