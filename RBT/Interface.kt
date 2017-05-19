@@ -1,4 +1,4 @@
-
+package RBT
 interface Interface<K: Comparable<K>, V> {
 
      fun insert(key: K, value: V)

@@ -1,4 +1,4 @@
-
+package RBT
 class RBT<K: Comparable<K>, V>: Interface<K, V>, Iterable<Pair<K, V>>  {
 
     var root: Node<K, V>? = null
@@ -22,12 +22,14 @@ class RBT<K: Comparable<K>, V>: Interface<K, V>, Iterable<Pair<K, V>>  {
                 key == current.key -> {
 
                     current.value = value
+
                     return
 
                 }
 
             }
         }
+
         if (par == null) {
 
             root = Node(key, value, par, true)
@@ -53,6 +55,7 @@ class RBT<K: Comparable<K>, V>: Interface<K, V>, Iterable<Pair<K, V>>  {
         private fun Balance(GetNode: Node<K, V>?) {
 
         var current: Node<K, V>? = GetNode
+
         var uncle: Node<K, V>? = null
 
         while (current?.parent?.Black == false) {
@@ -164,6 +167,7 @@ class RBT<K: Comparable<K>, V>: Interface<K, V>, Iterable<Pair<K, V>>  {
     }
 
     override fun delete(key: K) {
+
         val node = FindPrivate(key)
 
         if (node == null) return
@@ -173,70 +177,78 @@ class RBT<K: Comparable<K>, V>: Interface<K, V>, Iterable<Pair<K, V>>  {
 
         private fun delNode(node: Node<K, V>) {
 
-        val prev = findMax(node.left)
+
 
         when {
 
-            (node == root && node.Leaf()) -> {
+            (node == root && node.Leaf()) -> { // Узел является единственным в дереве.
 
                 root = null
                 return
 
             }
 
-            (node.right != null && node.left != null) -> {
+            (node.right != null && node.left != null) -> { // Есть правый и левый потомки.
 
-                node.key = prev!!.key
-                node.value = prev.value
-                delNode(prev)
-                return
+                val shifter = findmax(node.left)
 
-            }
+                node.key = shifter!!.key
+                node.value = shifter.value
 
-            (!node.Black && node.Leaf()) -> {
-
-                if (node == node.parent!!.left)
-                    node.parent!!.left = null
-                else
-                    node.parent!!.right = null
+                delNode(shifter)
 
                 return
 
             }
 
-            (node.Black && node.left != null && !node.left!!.Black) -> {
+            (!node.Black && node.Leaf()) -> { // Узел красный и является листом.
+
+                if (node == node.parent!!.left) node.parent!!.left = null
+
+                else node.parent!!.right = null
+
+                return
+
+            }
+
+            (node.Black && node.left != null && !node.left!!.Black) -> { // Узел черный, имеет левого красного потомка.
 
                 node.key = node.left!!.key
                 node.value = node.left!!.value
+
                 node.left = null
+
                 return
 
             }
 
-            (node.Black && node.right != null && !node.right!!.Black) -> {
+            (node.Black && node.right != null && !node.right!!.Black) -> { // Узел черный, имеет красного правого потомка.
 
                 node.key = node.right!!.key
                 node.value = node.right!!.value
+
                 node.right = null
+
                 return
 
             }
 
-            else -> deleteCase1(node)
+            else -> situation1(node)
 
         }
 
-        if (node == node.parent!!.left)
-            node.parent!!.left = null
-        else
-            node.parent!!.right = null
+        if (node == node.parent!!.left) node.parent!!.left = null
+
+        else node.parent!!.right = null
     }
 
-        private fun deleteCase1(node: Node<K, V>) {
-        if (node.parent != null) deleteCase2(node)
+        private fun situation1(node: Node<K, V>) {
+
+        if (node.parent != null) situation2(node)
+
     }
 
-        private fun deleteCase2(node: Node<K, V>) {
+        private fun situation2(node: Node<K, V>) {
 
         val brother = node.FindBrother()
 
@@ -244,138 +256,152 @@ class RBT<K: Comparable<K>, V>: Interface<K, V>, Iterable<Pair<K, V>>  {
 
             if (node == node.parent!!.left) node.parent!!.Lrotate()
 
-            else if (node == node.parent!!.right) node.parent!!.Rrotate()
+            else node.parent!!.Rrotate()
 
             if (root == node.parent) root = node.parent!!.parent
 
         }
 
-        deleteCase3(node)
+            situation3(node)
     }
 
-        private fun deleteCase3(node: Node<K, V>) {
+        private fun situation3(node: Node<K, V>) {
+
         val brother = node.FindBrother()
 
-        val a: Boolean = brother!!.left == null || brother.left!!.Black
-        val b: Boolean = brother.right == null || brother.right!!.Black
+        val BrotherLeftSonIsblack: Boolean = brother!!.left == null || brother.left!!.Black
+        val BrotherRightSonIsblack: Boolean = brother.right == null || brother.right!!.Black
 
-        if (a && b && brother.Black && node.parent!!.Black) {
+        if (BrotherLeftSonIsblack && BrotherRightSonIsblack && brother.Black && node.parent!!.Black) {
 
             brother.Black = false
-            deleteCase1(node.parent!!)
+
+            situation1(node.parent!!)
 
         }
 
-        else deleteCase4(node)
+        else situation4(node)
     }
 
-        private fun deleteCase4(node: Node<K, V>) {
+        private fun situation4(node: Node<K, V>) {
+
         val brother = node.FindBrother()
 
-        val a: Boolean = brother!!.left == null || brother.left!!.Black
-        val b: Boolean = brother.right == null || brother.right!!.Black
+        val BrotherLeftSonIsblack: Boolean = brother!!.left == null || brother.left!!.Black
+        val BrotherRightSonIsblack: Boolean = brother.right == null || brother.right!!.Black
 
-        if (a && b && brother.Black && !node.parent!!.Black) {
+        if (BrotherLeftSonIsblack && BrotherRightSonIsblack && brother.Black && !node.parent!!.Black) {
 
-            brother.Black = false
-            node.parent!!.Black = true
+            brother.SwapColors(node.parent)
 
         }
 
-        else deleteCase5(node)
+        else situation5(node)
     }
 
-        private fun deleteCase5(node: Node<K, V>) {
+        private fun situation5(node: Node<K, V>) {
+
         val brother = node.FindBrother()
 
-        val a: Boolean = brother!!.left == null || brother.left!!.Black
-        val b: Boolean = brother.right == null || brother.right!!.Black
+        val BrotherLeftSonIsblack: Boolean = brother!!.left == null || brother.left!!.Black
+        val BrotherRightSonIsblack: Boolean = brother.right == null || brother.right!!.Black
 
-        if (brother.Black) {
 
-            if (brother.left?.Black == false && b && node == node.parent?.left) brother.Rrotate()
 
-            else if (brother.right?.Black == false && a && node == node.parent?.right) brother.Lrotate()
+            if (brother.Black && brother.left?.Black == false && BrotherRightSonIsblack && node == node.parent?.left){
 
-        }
+                brother.Rrotate()
 
-        deleteCase6(node)
+            }
+
+            else if (brother.Black && brother.right?.Black == false && BrotherLeftSonIsblack && node == node.parent?.right) {
+
+                brother.Lrotate()
+
+            }
+
+
+            situation6(node)
     }
 
-        private fun deleteCase6(node: Node<K, V>) {
+        private fun situation6(node: Node<K, V>) {
 
         val brother = node.FindBrother()
 
         if (node == node.parent!!.left) {
 
             brother?.right?.Black = true
+
             node.parent?.Lrotate()
 
         }
+
         else {
 
             brother?.left?.Black = true
+
             node.parent?.Rrotate()
 
         }
 
-        if (root == node.parent)
-            root = node.parent!!.parent
+        if (root == node.parent) root = node.parent!!.parent
     }
 
 
     override fun iterator(): Iterator<Pair<K, V>> {
         return (object: Iterator<Pair<K, V>> {
-            var node = findMax(root)
-            var next = findMax(root)
-            val last = findMin(root)
+            var node = findmax(root)
+            var following = findmax(root)
+            val last = findmin(root)
 
             override fun hasNext(): Boolean {
+
                 return node != null && node!!.key >= last!!.key
+
             }
 
             override fun next(): Pair<K, V> {
-                next = node
-                node = nextSmaller(node)
-                return Pair(next!!.key, next!!.value)
+                following = node
+                node = findMaxSmaller(node)
+
+                return Pair(following!!.key, following!!.value)
             }
         })
     }
 
-
-    private fun nextSmaller(node: Node<K, V>?): Node<K, V>? {
+    private fun findMaxSmaller(node: Node<K, V>?): Node<K, V>? {
 
         var smaller = node
 
         if (smaller == null) return null
 
-        if (smaller.left != null) return findMax(smaller.left!!)
+        if (smaller.left != null) return findmax(smaller.left!!)
 
         else if (smaller == smaller.parent?.left) {
 
-            while (smaller == smaller!!.parent?.left)
+            while (smaller == smaller!!.parent?.left) {
 
                 smaller = smaller.parent!!
 
-
+            }
         }
 
         return smaller.parent
     }
 
-    private fun findMin(node: Node<K, V>?): Node<K, V>? {
+    private fun findmin(node: Node<K, V>?): Node<K, V>? {
 
         if (node?.left == null) return node
 
-        else return findMin(node.left)
+        else return findmin(node.left)
 
     }
 
-    private fun findMax(node: Node<K, V>?): Node<K, V>? {
+    private fun findmax(node: Node<K, V>?): Node<K, V>? {
 
         if (node?.right == null) return node
 
-        else return findMax(node.right)
+        else return findmax(node.right)
     }
 
 

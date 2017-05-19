@@ -1,11 +1,11 @@
-
+package RBT
 class Node<K: Comparable<K>, V>(var key: K, var value: V, var parent: Node<K, V>? = null, var Black: Boolean = false) {//Black=true, Red=false
 
     var right: Node<K, V>? = null
 
     var left: Node<K, V>? = null
 
-    private fun SwapColors(node2: Node<K, V>?) {
+    fun SwapColors(node2: Node<K, V>?) {
 
         val node1 = this.Black
 
