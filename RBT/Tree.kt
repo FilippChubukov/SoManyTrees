@@ -1,4 +1,4 @@
-package RBT
+
 class RBT<K: Comparable<K>, V>: Interface<K, V>, Iterable<Pair<K, V>>  {
 
     var root: Node<K, V>? = null
