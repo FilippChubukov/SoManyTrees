@@ -174,7 +174,7 @@ class BST<K: Comparable<K>, V>: Interface<K, V>, Iterable<Pair<K, V>> {
             override fun next(): Pair<K, V> {
 
                 following = node
-                node = FindMaxSmaller(node)
+                node = findMaxSmaller(node)
 
                 return Pair(following!!.key, following  !!.value)
 
@@ -182,7 +182,7 @@ class BST<K: Comparable<K>, V>: Interface<K, V>, Iterable<Pair<K, V>> {
             })
         }
 
-        private fun FindMaxSmaller(node: Node<K, V>?): Node<K, V>? {
+        private fun findMaxSmaller(node: Node<K, V>?): Node<K, V>? {
 
             if (node == null) return null
 
