@@ -31,7 +31,7 @@ class BST<K: Comparable<K>, V>: Interface<K, V>, Iterable<Pair<K, V>> {
         }
         else when {
 
-            key < parent!!.key -> parent.left = Node(key, value, parent)
+            key < parent.key -> parent.left = Node(key, value, parent)
 
             key > parent.key -> parent.right = Node(key, value, parent)
 
